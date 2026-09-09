@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Units: px vs pt vs em vs rem</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; padding: 2rem; background: #f8f9fb; color: #1a1a1a; }
+  h1 { margin-bottom: 1rem; }
+  h2 { margin-top: 2.5rem; margin-bottom: 0.5rem; color: #2563eb; }
+  .card { background: white; border-radius: 12px; padding: 1.5rem; margin: 1rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e5e7eb; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .demo-box { padding: 1rem; border-left: 4px solid #2563eb; background: #f0f7ff; border-radius: 0 8px 8px 0; }
+  code { background: #eef2ff; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+  .example-parent { font-size: 20px; background: #fef3c7; padding: 1rem; border-radius: 8px; margin: 0.5rem 0; }
+  .example-child { background: white; padding: 0.5rem; border-radius: 4px; margin-top: 0.5rem; border: 1px dashed #d97706; }
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: white; border-radius: 8px; overflow: hidden; }
+  th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+  th { background: #1e293b; color: white; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.75rem; font-weight: 600; }
+  .badge-abs { background: #fee2e2; color: #991b1b; }
+  .badge-rel { background: #dcfce7; color: #166534; }
+</style>
+</head>
+<body>
+
+<h1>CSS Font Size: px vs pt vs em vs rem</h1>
+<p style="color:#475569; max-width: 700px;">The core difference is <strong>who they are relative to</strong>. px and pt are absolute. em and rem are relative.</p>
+
+<table>
+  <tr><th>Unit</th><th>Stands For</th><th>Type</th><th>Relative To</th><th>Use For Web?</th></tr>
+  <tr><td><code>px</code></td><td>Pixels</td><td><span class="badge badge-abs">Absolute</span></td><td>Screen pixel (1px = 1 dot on screen)</td><td>Okay, but not accessible for fonts</td></tr>
+  <tr><td><code>pt</code></td><td>Points</td><td><span class="badge badge-abs">Absolute</span></td><td>Physical print size (1pt = 1/72 inch)</td><td>❌ Avoid on web</td></tr>
+  <tr><td><code>em</code></td><td>Em</td><td><span class="badge badge-rel">Relative</span></td><td>Parent element's font-size</td><td>Good for padding/margins that scale with text</td></tr>
+  <tr><td><code>rem</code></td><td>Root Em</td><td><span class="badge badge-rel">Relative</span></td><td>Root (html) font-size (default 16px)</td><td>✅ Best for font-size</td></tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h3>1. px - Pixel</h3>
+    <p>Fixed size. Doesn't care about parent or user settings.</p>
+    <div class="demo-box" style="font-size: 16px;">font-size: 16px → Exactly 16px</div>
+    <div class="demo-box" style="font-size: 24px; margin-top:8px;">font-size: 24px → Exactly 24px</div>
+    <p style="margin-top:8px; font-size:0.9em; color:#64748b;"><strong>Problem:</strong> If user sets browser to large text for accessibility, px won't fully respect it.</p>
+  </div>
+
+  <div class="card">
+    <h3>2. pt - Point</h3>
+    <p>For PRINT, not screens. 12pt = 1/6 inch.</p>
+    <div class="demo-box" style="font-size: 12pt;">font-size: 12pt ≈ 16px on screen</div>
+    <div class="demo-box" style="font-size: 18pt; margin-top:8px;">font-size: 18pt ≈ 24px on screen</div>
+    <p style="margin-top:8px; font-size:0.9em; color:#64748b;"><strong>Problem:</strong> Browsers have to guess how big an inch is on your screen. Different screens = different results.</p>
+  </div>
+
+  <div class="card">
+    <h3>3. em - Relative to PARENT</h3>
+    <p>This is where it gets tricky. It multiplies.</p>
+    <div class="example-parent">
+      Parent: 20px
+      <div class="example-child" style="font-size: 1.5em;">Child: 1.5em = 20px * 1.5 = <strong>30px</strong></div>
+      <div class="example-child" style="font-size: 2em;">Child: 2em = 20px * 2 = <strong>40px</strong></div>
+    </div>
+    <p style="font-size:0.9em; color:#b45309;"><strong>Compounding trap:</strong> If you nest em inside em, it keeps multiplying! 1.5em inside 1.5em = 2.25x</p>
+  </div>
+
+  <div class="card">
+    <h3>4. rem - Relative to ROOT</h3>
+    <p>Always relative to html tag. No compounding.</p>
+    <p style="font-size:0.9em;">Assuming root = 16px (default)</p>
+    <div class="demo-box" style="font-size: 1rem;">font-size: 1rem = 16px</div>
+    <div class="demo-box" style="font-size: 1.5rem; margin-top:8px;">font-size: 1.5rem = 24px</div>
+    <div class="demo-box" style="font-size: 2rem; margin-top:8px;">font-size: 2rem = 32px</div>
+    <p style="margin-top:8px; font-size:0.9em; color:#166534;"><strong>Best:</strong> Predictable, respects user settings, no nesting bug.</p>
+  </div>
+</div>
+
+<div class="card" style="margin-top:2rem;">
+  <h2 style="margin-top:0;">The Compounding Problem (Why rem > em for fonts)</h2>
+  <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+    <div style="flex:1; min-width:250px;">
+      <strong>em compounds:</strong>
+      <div style="font-size: 1.2em; border:1px solid #ddd; padding:10px; margin-top:5px;">
+        Level 1: 1.2em (19.2px)
+        <div style="font-size: 1.2em; border:1px solid #ddd; padding:10px; margin-top:5px;">
+          Level 2: 1.2em (23px)
+          <div style="font-size: 1.2em; border:1px solid #ddd; padding:10px; margin-top:5px;">
+            Level 3: 1.2em (27.6px) - Getting huge!
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1; min-width:250px;">
+      <strong>rem stays consistent:</strong>
+      <div style="font-size: 1.2rem; border:1px solid #ddd; padding:10px; margin-top:5px;">
+        Level 1: 1.2rem (19.2px)
+        <div style="font-size: 1.2rem; border:1px solid #ddd; padding:10px; margin-top:5px;">
+          Level 2: 1.2rem (19.2px)
+          <div style="font-size: 1.2rem; border:1px solid #ddd; padding:10px; margin-top:5px;">
+            Level 3: 1.2rem (19.2px) - Same!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0;">TL;DR - What should you use in 2026?</h2>
+  <ul style="padding-left:1.2rem; margin-top:0.5rem;">
+    <li><code>rem</code> for <strong>all font-sizes</strong> → Accessible, predictable. 1rem = 16px by default. Use <code>1rem, 1.125rem, 1.25rem, 1.5rem</code> etc.</li>
+    <li><code>em</code> for <strong>padding/margin/gap inside components</strong> → e.g. <code>padding: 0.5em 1em;</code> will scale perfectly if the button's font-size changes.</li>
+    <li><code>px</code> for <strong>borders, shadows, tiny details</strong> → <code>border: 1px solid</code> should stay 1px.</li>
+    <li><code>pt</code> → <strong>Never for screen</strong>. Only use inside <code>@media print { }</code> if you are making a print stylesheet.</li>
+  </ul>
+  <p style="margin-top:1rem; background:#f1f5f9; padding:0.8rem; border-radius:6px;"><strong>Pro tip:</strong> Set <code>html { font-size: 100%; }</code> (which is 16px) and then design everything in rem. If a user needs larger text, everything scales automatically.</p>
+</div>
+
+</body>
+</html>
